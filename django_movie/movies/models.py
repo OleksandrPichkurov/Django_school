@@ -2,6 +2,7 @@ from datetime import date
 from os.path import samefile
 
 from django.db import models
+from django.urls import reverse
 
 # Create your models here.
 
@@ -74,7 +75,10 @@ class Movie(models.Model):
     draft = models.BooleanField('Черновик', default=False)
 
     def __str__(self):
-        return self.name
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse('movie_detail', kwargs={'slug': self.url})
 
     class Meta:
         verbose_name = 'Фильм'
@@ -91,7 +95,7 @@ class MovieShots(models.Model):
     movie = models.ForeignKey(Movie, verbose_name='Фильм', on_delete=models.CASCADE)
     
     def __str__(self):
-        return self.name
+        return self.title
 
     class Meta:
         verbose_name = 'Кадр из фильма'
@@ -105,7 +109,7 @@ class RatingStar(models.Model):
     value = models.SmallIntegerField('Значение', default=0)
 
     def __str__(self):
-        return self.name
+        return self.value
 
     class Meta:
         verbose_name = 'Звезда рейтинга'
@@ -137,7 +141,7 @@ class Reviews(models.Model):
     movie = models.ForeignKey(Movie, verbose_name='фильм', on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.star} - {self.movie}'
+        return f'{self.name} - {self.movie}'
 
     class Meta:
         verbose_name = 'Отзыв'
